@@ -16,7 +16,7 @@ public class User {
     String email;
     @NotBlank
     String login;
-    String Name;
+    String name;
     @Past
     LocalDate birthday;
 }
