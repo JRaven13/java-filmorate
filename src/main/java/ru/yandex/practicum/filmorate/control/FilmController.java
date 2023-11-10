@@ -27,7 +27,7 @@ public class FilmController {
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        if(film.getReleaseDate().isBefore(DATE)) {
+        if (film.getReleaseDate().isBefore(DATE)) {
             throw new InvalidEmailException("Фильм с датой релиза до 28.12.1895 года, добавить нельзя!");
         }
         if (film.getId() == 0) {
@@ -41,7 +41,7 @@ public class FilmController {
     public Film put(@Valid @RequestBody Film film) {
         if (!films.containsKey(film.getId())) {
             throw new InvalidEmailException("Такого фильма нет!");
-        }else {
+        } else {
             films.put(film.getId(), film);
         }
         return film;
