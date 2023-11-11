@@ -20,6 +20,7 @@ public class UserController {
 
     @GetMapping
     public Collection<User> findAll() {
+        log.info("Пользователей всего {}", users.size());
         return users.values();
     }
 
@@ -27,20 +28,24 @@ public class UserController {
     public User create(@Valid @RequestBody User user) {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
+            log.info("Нет имени при регистрации у пользователя: {}", user.getEmail());
         }
         if (user.getId() == 0) {
             user.setId(generateid());
         }
         users.put(user.getId(), user);
+        log.info("Добавлен новый пользователь: {}", user.getEmail());
         return user;
     }
 
     @PutMapping
     public User put(@Valid @RequestBody User user) {
         if (!users.containsKey(user.getId())) {
+            log.debug("Меняется пользователь который не зарегистрирован: {}", user.getEmail());
             throw new InvalidEmailException("Такой логин не зарегистрирован!");
         } else {
             users.put(user.getId(), user);
+            log.info("Успешно изменены данные пользователя: {}", user.getEmail());
         }
         return user;
     }
