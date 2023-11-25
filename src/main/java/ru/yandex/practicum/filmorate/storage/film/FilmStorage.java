@@ -2,23 +2,41 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface FilmStorage {
+    /**
+     * Метод для получения списка фильмов
+     */
+    List<Film> findAllFilms();
 
-    void addFilm(Film film);
+    /**
+     * Метод для добавления фильма
+     */
+    Film addFilm(Film film);
 
-    void deleteFilm(int id);
+    /**
+     * Метод для обновления фильма
+     */
+    Film updateFilm(Film film);
 
-    void updateFilm(Film film);
-
-    Collection<Film> getAllFilms();
-
+    /**
+     * Метод получения фильма по id
+     */
     Film getFilmById(int id);
 
-    Film addLike(int filmId, int userId);
+    /**
+     * Метод для присвоения лайка фильму
+     */
+    Film like(int filmId, int userId);
 
+    /**
+     * Метод для удаления лайка с фильма
+     */
     Film deleteLike(int filmId, int userId);
 
-    boolean existById(int id);
+    /**
+     * Метод для получения списка популярных фильмов
+     */
+    List<Film> getRating(int count);
 }

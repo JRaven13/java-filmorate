@@ -1,32 +1,32 @@
 package ru.yandex.practicum.filmorate.model;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NonNull;
+import ru.yandex.practicum.filmorate.validator.ReleaseDate;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
+
 @Data
+@Builder
 public class Film {
+
     private int id;
-    @NonNull
     @NotBlank
     private String name;
-    @Size(min = 1, max = 200)
+    @NotBlank
+    @Size(max = 200)
     private String description;
-    @NonNull
+    @NotNull
+    @ReleaseDate(message = "Некорректна указана дата релиза.")
     private LocalDate releaseDate;
-    @NonNull
     @Positive
     private int duration;
-    @JsonIgnore
-    private Set<Integer> likes = new HashSet<>();
+    private Set<Integer> likes;
+    @NotNull
+    private Mpa mpa;
+    private Set<Genre> genres;
+
 }
-
-

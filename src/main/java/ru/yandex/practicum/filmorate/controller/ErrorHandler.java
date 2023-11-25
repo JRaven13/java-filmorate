@@ -1,32 +1,31 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidateException;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.ErrorResponse;
 
-import java.util.Map;
-
-@ControllerAdvice
+@RestControllerAdvice
 public class ErrorHandler {
 
+
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> handleGeneral(final Throwable e) {
-        return Map.of("ERROR", e.getMessage());
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNotFoundException(final NotFoundException e) {
+        return new ErrorResponse(
+                e.getMessage()
+        );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleValidateException(final ValidateException e) {
-        return Map.of("ERROR", e.getMessage());
+    public ErrorResponse handleValidationException(final ValidationException e) {
+        return new ErrorResponse(
+                e.getMessage()
+        );
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleObjectNotFoundException(final ObjectNotFoundException e) {
-        return Map.of("ERROR", e.getMessage());
-    }
 }
