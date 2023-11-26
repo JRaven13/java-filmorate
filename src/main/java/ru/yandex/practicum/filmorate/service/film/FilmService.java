@@ -3,14 +3,12 @@ package ru.yandex.practicum.filmorate.service.film;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.relational.core.sql.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.like.LikeStorage;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -19,14 +17,14 @@ import java.util.List;
 public class FilmService {
 
     private final FilmStorage filmStorage;
+    private final LikeStorage likeStorage;
 
-
-    public Film like(int filmId, int userId) {
-        return filmStorage.like(filmId, userId);
+    public Film like(Film film, int userId) {
+        return likeStorage.like(film, userId);
     }
 
-    public Film deleteLike(int filmId, int userId) {
-           return filmStorage.deleteLike(filmId, userId);
+    public Film deleteLike(Film film, int userId) {
+           return filmStorage.deleteLike(film, userId);
     }
 
     public List<Film> getTopFilms(int count) {

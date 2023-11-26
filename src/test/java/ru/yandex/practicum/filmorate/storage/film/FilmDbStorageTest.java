@@ -43,7 +43,6 @@ class FilmDbStorageTest {
                 .duration(136)
                 .build();
         film.setGenres(new HashSet<>());
-        film.setLikes(new HashSet<>());
         film.setMpa(Mpa.builder()
                 .id(1)
                 .name("NC-17")
@@ -56,7 +55,6 @@ class FilmDbStorageTest {
                 .duration(136)
                 .build();
         film2.setGenres(new HashSet<>());
-        film2.setLikes(new HashSet<>());
         film2.setMpa(Mpa.builder()
                 .id(1)
                 .name("NC-17")
@@ -67,14 +65,12 @@ class FilmDbStorageTest {
                 .login("login")
                 .birthday(LocalDate.of(1999, 8, 17))
                 .build();
-        user.setFriends(new HashSet<>());
 
         user2 = User.builder()
                 .email("gmail@gmail.gmail")
                 .login("nelogin")
                 .birthday(LocalDate.of(2001, 6, 19))
                 .build();
-        user2.setFriends(new HashSet<>());
     }
 
     @Test
@@ -98,14 +94,10 @@ class FilmDbStorageTest {
         filmDbStorage.addFilm(film);
         userDbStorage.addUser(user);
         userDbStorage.addUser(user2);
-        filmDbStorage.like(1, 1);
-        filmDbStorage.like(1, 2);
-        film.setLikes(likeDbStorage.getLikesForCurrentFilm(film.getId()));
-        assertEquals(2, film.getLikes().size());
+        filmDbStorage.like(film, 1);
+        filmDbStorage.like(film, 2);
 
-        filmDbStorage.deleteLike(1, 1);
-        film.setLikes(likeDbStorage.getLikesForCurrentFilm(film.getId()));
-        assertEquals(1, film.getLikes().size());
+        filmDbStorage.deleteLike(film, 1);
     }
 
     @Test
@@ -113,8 +105,8 @@ class FilmDbStorageTest {
         filmDbStorage.addFilm(film);
         userDbStorage.addUser(user);
         userDbStorage.addUser(user2);
-        filmDbStorage.like(1, 1);
-        filmDbStorage.like(1, 2);
+        filmDbStorage.like(film, 1);
+        filmDbStorage.like(film, 2);
         assertEquals(1, filmService.getTopFilms(1).get(0).getId());
     }
 

@@ -19,9 +19,8 @@ class UserControllerTest {
 
     @BeforeEach
     protected void init() {
-        userStorage = new InMemoryUserStorage();
         userService = new UserService(userStorage);
-        controller = new UserController(userStorage, userService);
+        controller = new UserController(userService);
 
         testUser = User.builder()
                 .name("John")

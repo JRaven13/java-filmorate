@@ -34,7 +34,7 @@ public class FilmController {
     @PutMapping("/{id}/like/{userId}")
     public Film like(@PathVariable int id, @PathVariable int userId) {
         log.info("Поступил запрос на присвоение лайка фильму.");
-       return filmService.like(id, userId);
+       return filmService.like(filmService.getFilm(id), userId);
     }
 
     @GetMapping()
@@ -50,15 +50,15 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> getBestFilms(@RequestParam(defaultValue = "10") String count) {
+    public List<Film> getBestFilms(@RequestParam(defaultValue = "10") int count) {
         log.info("Поступил запрос на получение списка популярных фильмов.");
-        return filmService.getTopFilms(Integer.parseInt(count));
+        return filmService.getTopFilms(count);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
     public Film deleteLike(@PathVariable int id, @PathVariable int userId) {
         log.info("Поступил запрос на удаление лайка у фильма.");
-        return filmService.deleteLike(userId, id);
+        return filmService.deleteLike(filmService.getFilm(id), userId);
     }
 
 }
