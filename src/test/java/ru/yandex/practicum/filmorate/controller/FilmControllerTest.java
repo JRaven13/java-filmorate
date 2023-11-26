@@ -25,7 +25,7 @@ public class FilmControllerTest {
     protected void init() {
         filmStorage = new InMemoryFilmStorage();
         filmService = new FilmService(filmStorage);
-        controller = new FilmController(filmStorage, filmService);
+        controller = new FilmController(filmService);
         testFilm = Film.builder()
                 .name("Тестовый фильм")
                 .description("Тестовое описание тестового фильма")

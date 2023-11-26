@@ -28,7 +28,4 @@ public class User {
     @PastOrPresent(message = "Некорректна указана дата рождения.")
     private LocalDate birthday;
 
-    private Set<Integer> friends;
-
-
 }
