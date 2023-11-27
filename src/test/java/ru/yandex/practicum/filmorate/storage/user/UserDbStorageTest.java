@@ -11,7 +11,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
