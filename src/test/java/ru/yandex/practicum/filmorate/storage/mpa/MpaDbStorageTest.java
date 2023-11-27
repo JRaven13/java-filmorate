@@ -37,7 +37,6 @@ public class MpaDbStorageTest {
                 .duration(136)
                 .build();
         film.setGenres(new HashSet<>());
-        film.setLikes(new HashSet<>());
     }
 
     @Test
