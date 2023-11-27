@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.genre;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -8,6 +9,7 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -45,15 +47,25 @@ public class GenreDbStorage implements GenreStorage {
     }
 
     public void addGenresForCurrentFilm(Film film) {
-        if (Objects.isNull(film.getGenres())) {
+        final int filmId = film.getId();
+        jdbcTemplate.update("delete from GENRE where FILM_ID = ?", filmId);
+        final Set<Genre> genres = film.getGenres();
+        if (genres == null || genres.isEmpty()) {
             return;
         }
-        film.getGenres().forEach(g -> {
-            String sqlQuery = "INSERT INTO genre(film_id, genre_id) VALUES (?, ?)";
-            jdbcTemplate.update(sqlQuery,
-                    film.getId(),
-                    g.getId());
-        });
+        final ArrayList<Genre> genreList = new ArrayList<>(genres);
+        jdbcTemplate.batchUpdate(
+                "insert into GENRE (FILM_ID, GENRE_ID) values (?, ?)",
+                new BatchPreparedStatementSetter() {
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        ps.setLong(1, filmId);
+                        ps.setLong(2, genreList.get(i).getId());
+                    }
+
+                    public int getBatchSize() {
+                        return genreList.size();
+                    }
+                });
     }
 
     public void updateGenresForCurrentFilm(Film film) {
