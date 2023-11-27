@@ -25,7 +25,7 @@ public class FilmControllerTest {
 
     @BeforeEach
     protected void init() {
-        filmService = new FilmService(filmStorage, likeStorage);
+        filmService = new FilmService(filmStorage);
         controller = new FilmController(filmService);
         testFilm = Film.builder()
                 .name("Тестовый фильм")

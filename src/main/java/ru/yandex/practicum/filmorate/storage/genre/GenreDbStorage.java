@@ -34,7 +34,7 @@ public class GenreDbStorage implements GenreStorage {
 
     public Set<Genre> getGenreForCurrentFilm(int id) {
         Set<Genre> genreSet = new LinkedHashSet<>();
-        SqlRowSet genreRows = jdbcTemplate.queryForRowSet("SELECT id, film_id, genre_id FROM genre " +
+        SqlRowSet genreRows = jdbcTemplate.queryForRowSet("SELECT film_id, genre_id FROM genre " +
                 "ORDER BY genre_id ASC");
         while (genreRows.next()) {
             if (genreRows.getLong("film_id") == id) {

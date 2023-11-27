@@ -24,15 +24,30 @@ import java.util.*;
 @Component
 public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
+    private final UserStorage userStorage;
     private final MpaDbStorage mpaDbStorage;
     private final LikeStorage likeDbStorage;
     private final GenreDbStorage genreDbStorage;
 
     @Override
     public List<Film> findAllFilms() {
+        List<Film> films = new ArrayList<>();
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT film_id, name, description, release_date," +
                 " duration, rating_mpa_id FROM films");
-        return jdbcTemplate.query("SELECT * FROM films", this::mapRowToFilm);
+        while (filmRows.next()) {
+            Film film = Film.builder()
+                    .id(filmRows.getInt("film_id"))
+                    .name(filmRows.getString("name"))
+                    .description(filmRows.getString("description"))
+                    .releaseDate(Objects.requireNonNull(filmRows.getDate("release_date")).toLocalDate())
+                    .duration(filmRows.getInt("duration"))
+                    .mpa(mpaDbStorage.getMpa(filmRows.getInt("rating_mpa_id")))
+                    .build();
+            film.setGenres(genreDbStorage.getGenreForCurrentFilm(film.getId()));
+
+            films.add(film);
+        }
+        return films;
     }
 
     @Override
@@ -76,13 +91,22 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public Film like(Film film, int userId) {
-        return likeDbStorage.like(film, userId);
+    public Film like(int filmId, int userId) {
+        Film film = getFilmById(filmId);
+        String sqlQuery = "INSERT INTO likes (film_id, user_id) VALUES(?, ?)";
+        jdbcTemplate.update(sqlQuery, filmId, userId);
+        return film;
     }
 
     @Override
-    public Film deleteLike(Film film, int userId) {
-        return likeDbStorage.deleteLike(film, userId);
+    public Film deleteLike(int filmId, int userId) {
+        if (userStorage.getUserById(userId) == null) {
+            throw new NotFoundException("Пользователь не найден.");
+        }
+        Film film = getFilmById(filmId);
+        String sqlQuery = "DELETE FROM likes WHERE film_id = ? AND user_id = ?";
+        jdbcTemplate.update(sqlQuery, filmId, userId);
+        return film;
     }
 
     @Override

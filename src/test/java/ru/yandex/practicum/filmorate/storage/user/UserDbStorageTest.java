@@ -35,21 +35,18 @@ class UserDbStorageTest {
                 .login("login")
                 .birthday(LocalDate.of(1999, 8, 17))
                 .build();
-        user.setFriends(new HashSet<>());
 
         friend = User.builder()
                 .email("gmail@gmail.gmail")
                 .login("nelogin")
                 .birthday(LocalDate.of(2001, 6, 19))
                 .build();
-        friend.setFriends(new HashSet<>());
 
         mutualFriend = User.builder()
                 .email("mutual@mutual.mutual")
                 .login("mutual")
                 .birthday(LocalDate.of(2001, 1, 11))
                 .build();
-        mutualFriend.setFriends(new HashSet<>());
     }
 
 

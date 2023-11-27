@@ -94,10 +94,10 @@ class FilmDbStorageTest {
         filmDbStorage.addFilm(film);
         userDbStorage.addUser(user);
         userDbStorage.addUser(user2);
-        filmDbStorage.like(film, 1);
-        filmDbStorage.like(film, 2);
+        filmDbStorage.like(1, 1);
+        filmDbStorage.like(1, 2);
 
-        filmDbStorage.deleteLike(film, 1);
+        filmDbStorage.deleteLike(1, 1);
     }
 
     @Test
@@ -105,8 +105,8 @@ class FilmDbStorageTest {
         filmDbStorage.addFilm(film);
         userDbStorage.addUser(user);
         userDbStorage.addUser(user2);
-        filmDbStorage.like(film, 1);
-        filmDbStorage.like(film, 2);
+        filmDbStorage.like(1, 1);
+        filmDbStorage.like(1, 2);
         assertEquals(1, filmService.getTopFilms(1).get(0).getId());
     }
 

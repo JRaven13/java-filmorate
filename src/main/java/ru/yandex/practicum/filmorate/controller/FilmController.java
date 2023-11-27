@@ -26,7 +26,7 @@ public class FilmController {
     }
 
     @PutMapping("/films")
-    public Film update(@Validated(Update.class) @RequestBody final Film film) {
+    public Film changeFilm(@Valid @RequestBody Film film) {
         log.info("Updating film {}", film);
         return filmService.update(film);
     }
@@ -34,7 +34,7 @@ public class FilmController {
     @PutMapping("/{id}/like/{userId}")
     public Film like(@PathVariable int id, @PathVariable int userId) {
         log.info("Поступил запрос на присвоение лайка фильму.");
-       return filmService.like(filmService.getFilm(id), userId);
+       return filmService.like(id, userId);
     }
 
     @GetMapping()
@@ -58,7 +58,7 @@ public class FilmController {
     @DeleteMapping("/{id}/like/{userId}")
     public Film deleteLike(@PathVariable int id, @PathVariable int userId) {
         log.info("Поступил запрос на удаление лайка у фильма.");
-        return filmService.deleteLike(filmService.getFilm(id), userId);
+        return filmService.deleteLike(id, userId);
     }
 
 }
