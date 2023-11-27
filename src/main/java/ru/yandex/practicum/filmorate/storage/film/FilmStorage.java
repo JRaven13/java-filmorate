@@ -28,12 +28,12 @@ public interface FilmStorage {
     /**
      * Метод для присвоения лайка фильму
      */
-    Film like(int filmId, int userId);
+    Film like(Film film, int userId);
 
     /**
      * Метод для удаления лайка с фильма
      */
-    Film deleteLike(int filmId, int userId);
+    Film deleteLike(Film film, int userId);
 
     /**
      * Метод для получения списка популярных фильмов

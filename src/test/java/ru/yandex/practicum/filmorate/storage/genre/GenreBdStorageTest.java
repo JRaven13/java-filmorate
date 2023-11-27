@@ -41,6 +41,7 @@ public class GenreBdStorageTest {
                 .duration(136)
                 .build();
         film.setGenres(new HashSet<>());
+        film.setLikes(new HashSet<>());
         film.setMpa(Mpa.builder()
                 .id(1)
                 .name("NC-17")

@@ -17,13 +17,14 @@ import java.util.List;
 public class FilmService {
 
     private final FilmStorage filmStorage;
+    private final LikeStorage likeStorage;
 
-    public Film like(int filmId, int userId) {
-        return filmStorage.like(filmId, userId);
+    public Film like(Film film, int userId) {
+        return likeStorage.like(film, userId);
     }
 
-    public Film deleteLike(int filmId, int userId) {
-        return filmStorage.deleteLike(filmId, userId);
+    public Film deleteLike(Film film, int userId) {
+           return filmStorage.deleteLike(film, userId);
     }
 
     public List<Film> getTopFilms(int count) {
