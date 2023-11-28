@@ -1,32 +1,42 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidateException;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.ErrorResponse;
 
-import java.util.Map;
-
-@ControllerAdvice
+@Slf4j
+@RestControllerAdvice
 public class ErrorHandler {
+
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNotFoundException(final NotFoundException e) {
+        log.info("404 {}", e.getMessage(), e);
+        return new ErrorResponse(
+                e.getMessage()
+        );
+    }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> handleGeneral(final Throwable e) {
-        return Map.of("ERROR", e.getMessage());
+    public ErrorResponse handleThrowable(final Throwable e) {
+        log.info("500 {}", e.getMessage(), e);
+        return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleValidateException(final ValidateException e) {
-        return Map.of("ERROR", e.getMessage());
+    public ErrorResponse handleValidationException(final ValidationException e) {
+        log.info("400 {}", e.getMessage(), e);
+        return new ErrorResponse(
+                e.getMessage()
+        );
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleObjectNotFoundException(final ObjectNotFoundException e) {
-        return Map.of("ERROR", e.getMessage());
-    }
 }
