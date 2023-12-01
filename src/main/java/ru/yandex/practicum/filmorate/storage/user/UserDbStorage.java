@@ -114,6 +114,11 @@ public class UserDbStorage implements UserStorage {
         return new ArrayList<>(jdbcTemplate.query(sqlQuery, this::mapRowToUser, id));
     }
 
+    @Override
+    public void deleteUser(int userid) {
+        jdbcTemplate.update("DELETE FROM USERS WHERE USER_ID = ?",userid);
+    }
+
     private Map<String, Object> toMap(User user) {
         Map<String, Object> values = new HashMap<>();
         values.put("email", user.getEmail());

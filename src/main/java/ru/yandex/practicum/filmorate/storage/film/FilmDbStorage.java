@@ -94,6 +94,11 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, count);
     }
 
+    @Override
+    public void deleteFilm(int filmId) {
+        jdbcTemplate.update("DELETE FROM FILMS WHERE FILM_ID = ?", filmId);
+    }
+
     private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
         Film film = Film.builder()
                 .id(resultSet.getInt("film_id"))
