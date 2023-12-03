@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -29,8 +28,6 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> findAllFilms() {
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT film_id, name, description, release_date," +
-                " duration, rating_mpa_id FROM films");
         return jdbcTemplate.query("SELECT * FROM films", this::mapRowToFilm);
     }
 
@@ -96,6 +93,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public void deleteFilm(int filmId) {
+        getFilmById(filmId);
         jdbcTemplate.update("DELETE FROM FILMS WHERE FILM_ID = ?", filmId);
     }
 

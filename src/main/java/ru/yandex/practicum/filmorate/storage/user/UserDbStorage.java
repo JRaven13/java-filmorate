@@ -109,6 +109,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<User> getFriendsByUserId(Integer id) {
+        getUserById(id);
         String sqlQuery = "SELECT user_id, email, login, name, birthday FROM users WHERE user_id IN" +
                 "(SELECT friend_id FROM friends WHERE user_id=?)";
         return new ArrayList<>(jdbcTemplate.query(sqlQuery, this::mapRowToUser, id));
@@ -129,14 +130,13 @@ public class UserDbStorage implements UserStorage {
     }
 
     private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
-        User user = User.builder()
+        return User.builder()
                 .id(resultSet.getInt("user_id"))
                 .email(resultSet.getString("email"))
                 .login(resultSet.getString("login"))
                 .name(resultSet.getString("name"))
                 .birthday(resultSet.getDate("birthday").toLocalDate())
                 .build();
-        return user;
     }
 
     private void validationUser(User user) throws ValidationException {

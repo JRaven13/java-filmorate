@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.like.LikeStorage;
@@ -49,10 +48,6 @@ public class FilmService {
     }
 
     public void deleteFilm(int filmId) {
-        if (filmStorage.getFilmById(filmId)== null){
-            log.info("Фильм с ID {} не найден",filmId);
-            throw new NotFoundException("Фильм не найден");
-        }
         filmStorage.deleteFilm(filmId);
     }
 }

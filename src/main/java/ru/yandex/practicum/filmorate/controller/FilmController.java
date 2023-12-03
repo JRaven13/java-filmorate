@@ -60,6 +60,7 @@ public class FilmController {
         log.info("Поступил запрос на удаление лайка у фильма.");
         return filmService.deleteLike(filmService.getFilm(id), userId);
     }
+    @DeleteMapping("/{filmId}")
     public void deleteFilm(@PathVariable int filmId){
         filmService.deleteFilm(filmId);
     }

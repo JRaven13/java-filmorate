@@ -49,8 +49,8 @@ CREATE TABLE IF NOT EXISTS director_films
 );
 CREATE TABLE IF NOT EXISTS friends
 (
-    user_id         INTEGER NOT NULL REFERENCES users (user_id) ON DELETE CASCADE,
-    friend_id       INTEGER NOT NULL REFERENCES users (user_id) ON DELETE CASCADE
+    user_id   INTEGER NOT NULL REFERENCES users (user_id) ON DELETE CASCADE,
+    friend_id INTEGER NOT NULL REFERENCES users (user_id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS feed
 (
@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS reviews
     is_positive BOOLEAN      NOT NULL,
     user_id     INTEGER      NOT NULL,
     film_id     INTEGER      NOT NULL REFERENCES films (film_id) ON DELETE CASCADE
+
 );
 CREATE TABLE IF NOT EXISTS like_review
 (
@@ -76,3 +77,4 @@ CREATE TABLE IF NOT EXISTS like_review
     user_id     INTEGER NOT NULL REFERENCES users (user_id) ON DELETE CASCADE,
     is_positive BOOLEAN NOT NULL
 );
+
