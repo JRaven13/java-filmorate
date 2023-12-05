@@ -39,4 +39,8 @@ public interface FilmStorage {
      * Метод для получения списка популярных фильмов
      */
     List<Film> getRating(int count);
+    /**
+     * Метод для удаления фильма
+     */
+    void deleteFilm(int filmId);
 }
