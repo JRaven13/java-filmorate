@@ -78,3 +78,4 @@ CREATE TABLE IF NOT EXISTS like_review
     is_positive BOOLEAN NOT NULL
 );
 
+
