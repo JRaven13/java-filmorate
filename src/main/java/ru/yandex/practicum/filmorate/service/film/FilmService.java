@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.like.LikeStorage;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Service
@@ -24,7 +25,7 @@ public class FilmService {
     }
 
     public Film deleteLike(Film film, int userId) {
-           return filmStorage.deleteLike(film, userId);
+        return filmStorage.deleteLike(film, userId);
     }
 
     public List<Film> getTopFilms(int count) {
@@ -49,5 +50,9 @@ public class FilmService {
 
     public void deleteFilm(int filmId) {
         filmStorage.deleteFilm(filmId);
+    }
+
+    public LinkedHashSet<Film> filmsByDirector(int directorId, String sortBy) {
+        return filmStorage.filmsByDirector(directorId, sortBy);
     }
 }

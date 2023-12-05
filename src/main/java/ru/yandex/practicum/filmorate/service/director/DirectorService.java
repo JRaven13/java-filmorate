@@ -24,7 +24,7 @@ public class DirectorService {
     }
 
     public Director update(Director director) {
-        return directorStorage.update(director).orElseThrow(()->new NotFoundException("Режиссёер не найден"));
+        return directorStorage.update(director).orElseThrow(() -> new NotFoundException("Режиссёер не найден"));
     }
 
     public void delete(Integer id) {
@@ -32,7 +32,7 @@ public class DirectorService {
     }
 
     public Director findById(Integer id) {
-        return directorStorage.findById(id).orElseThrow(()->new NotFoundException("Режиссёер не найден"));
+        return directorStorage.findById(id).orElseThrow(() -> new NotFoundException("Режиссёер не найден"));
 
     }
 
