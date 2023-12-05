@@ -1,31 +1,55 @@
 package ru.yandex.practicum.filmorate.service.review;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.storage.likeReview.LikeReviewStorage;
 import ru.yandex.practicum.filmorate.storage.review.ReviewStorage;
 
-import java.util.Collection;
+
+import java.util.List;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class ReviewService {
-    private ReviewStorage reviewStorage;
 
-    @Autowired
-    public ReviewService(ReviewStorage reviewStorage) {
-        this.reviewStorage = reviewStorage;
+    private final ReviewStorage reviewStorage;
+    private final LikeReviewStorage likeReviewStorage;
+
+    public Review create(Review review) {
+        return reviewStorage.create(review);
     }
 
-    public Review createReview(Review review) {
-        return reviewStorage.addReview(review);
-
+    public Review update(Review review) {
+        return reviewStorage.update(review).orElseThrow(() -> new NotFoundException("Отзыв не найден."));
     }
 
-    public Collection<Review> getAll() {
-        return reviewStorage.getAll();
+    public void delete(Integer id) {
+        reviewStorage.delete(id);
+    }
+
+    public Review findById(Integer id) {
+        return reviewStorage.findById(id).orElseThrow(() -> new NotFoundException("Отзыв не найден."));
+    }
+
+    public List<Review> findAll(Integer filmId, Integer count) {
+        return reviewStorage.findAll(filmId, count);
+    }
+
+    public void createLike(Integer id, Integer userId) {
+        likeReviewStorage.createLike(id, userId);
+    }
+
+    public void createDislike(Integer id, Integer userId) {
+        likeReviewStorage.createDislike(id, userId);
+    }
+
+    public void deleteLike(Integer id, Integer userId) {
+        likeReviewStorage.deleteLike(id, userId);
+    }
+
+    public void deleteDislike(Integer id, Integer userId) {
+        likeReviewStorage.deleteDislike(id, userId);
     }
 }
