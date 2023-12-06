@@ -75,4 +75,11 @@ public class FilmController {
         return films;
     }
 
+    @GetMapping("/search")
+    public List<Film> search(@RequestParam String query, @RequestParam String by) {
+        log.info("Поступил запрос на получение списка фильмов по названию.");
+        return filmService.getSearchResults(query, by);
+    }
+
+
 }

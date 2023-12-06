@@ -51,4 +51,6 @@ public interface FilmStorage {
      * Метод для получения списка фильмов по режиссеру
      */
     LinkedHashSet<Film> filmsByDirector(int directorId, String sortBy);
+
+    List<Film> searchBy(String query, String by);
 }
