@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
@@ -71,7 +72,12 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable int userId) {
         userService.deleteUser(userId);
+    }
 
+    @GetMapping("/{userId}/feed")
+    public List<Event> getFeed(@PathVariable int userId) {
+        log.info("Поступил запрос на получение ленты событий.");
+        return userService.getFeed(userId);
     }
 
 }
