@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import javax.validation.Valid;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Slf4j
@@ -34,7 +35,7 @@ public class FilmController {
     @PutMapping("/{id}/like/{userId}")
     public Film like(@PathVariable int id, @PathVariable int userId) {
         log.info("Поступил запрос на присвоение лайка фильму.");
-       return filmService.like(filmService.getFilm(id), userId);
+        return filmService.like(filmService.getFilm(id), userId);
     }
 
     @GetMapping()
@@ -60,9 +61,18 @@ public class FilmController {
         log.info("Поступил запрос на удаление лайка у фильма.");
         return filmService.deleteLike(filmService.getFilm(id), userId);
     }
+
     @DeleteMapping("/{filmId}")
-    public void deleteFilm(@PathVariable int filmId){
+    public void deleteFilm(@PathVariable int filmId) {
         filmService.deleteFilm(filmId);
+    }
+
+    @GetMapping("/director/{directorId}")
+    public LinkedHashSet<Film> filmsByDirector(@PathVariable int directorId, @RequestParam String sortBy) {
+        log.info("Поступил запрос на получение списка фильмов режиссера");
+        LinkedHashSet<Film> films = filmService.filmsByDirector(directorId, sortBy);
+        log.info("Ответ отправлен: {}", films);
+        return films;
     }
 
 }

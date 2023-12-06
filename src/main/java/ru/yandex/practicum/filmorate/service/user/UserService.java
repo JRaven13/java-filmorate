@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.util.List;
 
 
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -55,8 +54,8 @@ public class UserService {
 
 
     public void deleteUser(int userid) {
-        if (userStorage.getUserById(userid) == null){
-            log.info("Пользователь с ID {} не найден",userid);
+        if (userStorage.getUserById(userid) == null) {
+            log.info("Пользователь с ID {} не найден", userid);
             throw new NotFoundException("Пользователь не найден");
         }
         userStorage.deleteUser(userid);
