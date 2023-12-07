@@ -75,4 +75,8 @@ public class FilmService {
     public LinkedHashSet<Film> filmsByDirector(int directorId, String sortBy) {
         return filmStorage.filmsByDirector(directorId, sortBy);
     }
+
+    public List<Film> getSearchResults(String query, String by) {
+        return filmStorage.searchBy(query, by);
+    }
 }

@@ -230,4 +230,51 @@ public class FilmDbStorage implements FilmStorage {
         jdbcTemplate.update(sql, film.getId());
         addDirectorForCurrentFilm(film);
     }
+
+    @Override
+    public List<Film> searchBy(String query, String by) {
+        List<Film> searchResults = new ArrayList<>();
+        String sqlBegin = "SELECT f.*, COUNT(l.film_id) as count " +
+                "FROM films f " +
+                "LEFT JOIN director_films df ON f.film_id = df.film_id " +
+                "LEFT JOIN directors d ON df.director_id = d.director_id " +
+                "LEFT JOIN likes l ON f.film_id = l.film_id ";
+
+        String sqlEnd = "GROUP BY f.film_id " +
+                "ORDER BY count DESC";
+
+        switch (by) {
+            case "title": {
+                String sql = sqlBegin + "WHERE LOWER(f.name) LIKE LOWER(CONCAT('%',?,'%')) " + sqlEnd;
+                searchResults = jdbcTemplate.query(sql, this::makeFilm, query);
+                break;
+            }
+            case "director": {
+                String sql = sqlBegin + "WHERE LOWER(d.name) LIKE LOWER(CONCAT('%',?,'%')) " + sqlEnd;
+                searchResults = jdbcTemplate.query(sql, this::makeFilm, query);
+                break;
+            }
+            case "title,director": {
+                String sql = sqlBegin + "WHERE LOWER(f.name) LIKE LOWER(CONCAT('%',?,'%')) " +
+                        "OR LOWER(d.name) LIKE LOWER(CONCAT('%',?,'%')) " + sqlEnd;
+                searchResults = jdbcTemplate.query(sql, this::makeFilm, query, query);
+                break;
+            }
+        }
+        return searchResults;
+    }
+
+    private Film makeFilm(ResultSet resultSet, int rowNum) throws SQLException {
+        Film film = Film.builder()
+                .id(resultSet.getInt("film_id"))
+                .name(resultSet.getString("name"))
+                .description(resultSet.getString("description"))
+                .releaseDate(resultSet.getDate("release_date").toLocalDate())
+                .duration(resultSet.getInt("duration"))
+                .mpa(mpaDbStorage.getMpa(resultSet.getInt("rating_mpa_id")))
+                .genres(genreDbStorage.getGenreForCurrentFilm(resultSet.getInt("film_id")))
+                .directors(getFilmDirectors(resultSet.getInt("film_id")))
+                .build();
+        return film;
+    }
 }
