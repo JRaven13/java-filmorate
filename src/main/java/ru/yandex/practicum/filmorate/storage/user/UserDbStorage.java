@@ -8,7 +8,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.mpa.MpaDbStorage;
 
@@ -121,7 +120,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public void deleteUser(int userid) {
-        jdbcTemplate.update("DELETE FROM USERS WHERE USER_ID = ?",userid);
+        jdbcTemplate.update("DELETE FROM USERS WHERE USER_ID = ?", userid);
     }
 
     private Map<String, Object> toMap(User user) {

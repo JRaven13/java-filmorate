@@ -1,10 +1,15 @@
 package ru.yandex.practicum.filmorate.service.user;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
+
+
+@Slf4j
 public class SlopeOne {
     private Map<Integer, Map<Integer, Double>> diff = new HashMap<>();
     private Map<Integer, Map<Integer, Integer>> freq = new HashMap<>();
@@ -75,7 +80,6 @@ public class SlopeOne {
                 diff.get(j).put(i, oldValue / count);
             }
         }
-        printData(data);
     }
 
     private void predict(Map<Integer, HashMap<Integer, Double>> data) {
@@ -94,6 +98,7 @@ public class SlopeOne {
                         uPred.put(k, uPred.get(k) + finalValue);
                         uFreq.put(k, uFreq.get(k) + freq.get(k).get(j).intValue());
                     } catch (NullPointerException e1) {
+                        log.info(e1.getMessage());
                     }
                 }
             }
@@ -112,15 +117,8 @@ public class SlopeOne {
             }
             outputData.put(e.getKey(), clean);
         }
-        printData(outputData);
     }
 
-    private void printData(Map<Integer, HashMap<Integer, Double>> data) {
-        for (Integer user : data.keySet()) {
-            System.out.println(user + ":");
-            print(data.get(user));
-        }
-    }
 
     private void print(HashMap<Integer, Double> hashMap) {
         NumberFormat formatter = new DecimalFormat("#0.000");

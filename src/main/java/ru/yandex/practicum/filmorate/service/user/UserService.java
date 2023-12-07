@@ -98,7 +98,7 @@ public class UserService {
         slopeOne.calc(likes);
         List<Integer> filmIds = slopeOne.getRecommendations(userId);
         List<Film> filmList = new ArrayList<>();
-        for (Integer filmId : filmIds){
+        for (Integer filmId : filmIds) {
             filmList.add(filmStorage.getFilmById(filmId));
         }
         return filmList;
