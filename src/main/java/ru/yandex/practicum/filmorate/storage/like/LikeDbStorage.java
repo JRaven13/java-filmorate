@@ -8,8 +8,7 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -45,5 +44,20 @@ public class LikeDbStorage implements LikeStorage {
         String sqlQuery = "DELETE FROM likes WHERE film_id = ? AND user_id = ?";
         jdbcTemplate.update(sqlQuery, film.getId(), userId);
         return film;
+    }
+
+    @Override
+    public Map<Integer, Set<Integer>> getAllLikes() {
+        Map<Integer, Set<Integer>> likesMap = new HashMap<>();
+        Set<Integer> likes = new HashSet<>();
+        SqlRowSet likeRows = jdbcTemplate.queryForRowSet("SELECT film_id, user_id FROM likes");
+        while (likeRows.next()) {
+            int userId = likeRows.getInt("user_id");
+            if (!likesMap.containsKey(userId)) {
+                likesMap.put(userId, new HashSet<>());
+            }
+            likesMap.get(userId).add(likeRows.getInt("film_id"));
+        }
+        return likesMap;
     }
 }
