@@ -4,6 +4,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface FilmStorage {
@@ -40,7 +41,7 @@ public interface FilmStorage {
     /**
      * Метод для получения списка популярных фильмов
      */
-    List<Film> getRating(int count);
+    List<Film> getRating(int count, Optional<Integer> genreId, Optional<Integer> year);
 
     /**
      * Метод для удаления фильма
@@ -53,4 +54,6 @@ public interface FilmStorage {
     LinkedHashSet<Film> filmsByDirector(int directorId, String sortBy);
 
     List<Film> searchBy(String query, String by);
+
+    List<Film> getCommonFilms(int userId, int friendId);
 }

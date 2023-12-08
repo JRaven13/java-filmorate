@@ -11,8 +11,11 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.like.LikeStorage;
 
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -48,12 +51,14 @@ public class FilmService {
         return deletedLike;
     }
 
-    public List<Film> getTopFilms(int count) {
-        return filmStorage.getRating(count);
+    public List<Film> getTopFilms(int count, Optional<Integer> genreId, Optional<Integer> year) {
+        return filmStorage.getRating(count,genreId,year);
     }
 
     public Film create(Film film) {
-        return filmStorage.addFilm(film);
+        Film newFilm =  filmStorage.addFilm(film);
+        newFilm.getGenres().stream().sorted(Comparator.comparing(Genre::getId).reversed());
+        return newFilm;
     }
 
     public Film update(Film film) {
@@ -64,7 +69,7 @@ public class FilmService {
         return filmStorage.findAllFilms();
     }
 
-    public Film getFilm(@PathVariable int id) {
+    public Film getFilm(int id) {
         return filmStorage.getFilmById(id);
     }
 
@@ -74,6 +79,9 @@ public class FilmService {
 
     public LinkedHashSet<Film> filmsByDirector(int directorId, String sortBy) {
         return filmStorage.filmsByDirector(directorId, sortBy);
+    }
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        return filmStorage.getCommonFilms(userId, friendId);
     }
 
     public List<Film> getSearchResults(String query, String by) {

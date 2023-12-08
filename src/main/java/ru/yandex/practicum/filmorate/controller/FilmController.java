@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.service.film.FilmService;
 import javax.validation.Valid;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -22,7 +23,7 @@ public class FilmController {
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        log.info("Поступил запрос на добавление фильма.");
+        log.info("Поступил запрос на добавление фильма.{}", film);
         return filmService.create(film);
     }
 
@@ -51,9 +52,11 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> getBestFilms(@RequestParam(defaultValue = "10") int count) {
+    public List<Film> getBestFilms(@RequestParam(defaultValue = "10") int count,
+                                   @RequestParam Optional<Integer> genreId,
+                                   @RequestParam Optional<Integer> year) {
         log.info("Поступил запрос на получение списка популярных фильмов.");
-        return filmService.getTopFilms(count);
+        return filmService.getTopFilms(count, genreId, year);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
@@ -79,6 +82,12 @@ public class FilmController {
     public List<Film> search(@RequestParam String query, @RequestParam String by) {
         log.info("Поступил запрос на получение списка фильмов по названию.");
         return filmService.getSearchResults(query, by);
+    }
+
+    @GetMapping("/common")
+    public List<Film> getCommonFilms(@RequestParam int userId, @RequestParam int friendId) {
+        log.info("Поступил запрос на получение общих фильмов у пользователей {} и {}.", userId, friendId);
+        return filmService.getCommonFilms(userId, friendId);
     }
 
 
