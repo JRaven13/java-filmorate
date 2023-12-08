@@ -27,7 +27,6 @@ public class Film {
     @NotNull
     private Mpa mpa;
     private Set<Genre> genres;
-
     private Set<Director> directors;
 
 }
