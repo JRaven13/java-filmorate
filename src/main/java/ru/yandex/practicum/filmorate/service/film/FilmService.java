@@ -4,18 +4,16 @@ package ru.yandex.practicum.filmorate.service.film;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.feed.FeedStorage;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.like.LikeStorage;
 
 import java.time.Instant;
-import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 @Slf4j
@@ -52,13 +50,11 @@ public class FilmService {
     }
 
     public List<Film> getTopFilms(int count, Optional<Integer> genreId, Optional<Integer> year) {
-        return filmStorage.getRating(count,genreId,year);
+        return filmStorage.getRating(count, genreId, year);
     }
 
     public Film create(Film film) {
-        Film newFilm =  filmStorage.addFilm(film);
-        newFilm.getGenres().stream().sorted(Comparator.comparing(Genre::getId).reversed());
-        return newFilm;
+        return filmStorage.addFilm(film);
     }
 
     public Film update(Film film) {
@@ -80,6 +76,7 @@ public class FilmService {
     public LinkedHashSet<Film> filmsByDirector(int directorId, String sortBy) {
         return filmStorage.filmsByDirector(directorId, sortBy);
     }
+
     public List<Film> getCommonFilms(int userId, int friendId) {
         return filmStorage.getCommonFilms(userId, friendId);
     }
