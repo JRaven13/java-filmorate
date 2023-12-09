@@ -12,7 +12,6 @@ import ru.yandex.practicum.filmorate.storage.like.LikeStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -97,10 +96,6 @@ public class UserService {
         SlopeOne slopeOne = new SlopeOne();
         slopeOne.calc(likes);
         List<Integer> filmIds = slopeOne.getRecommendations(userId);
-        List<Film> filmList = new ArrayList<>();
-        for (Integer filmId : filmIds) {
-            filmList.add(filmStorage.getFilmById(filmId));
-        }
-        return filmList;
+        return filmStorage.getFilms(filmIds);
     }
 }

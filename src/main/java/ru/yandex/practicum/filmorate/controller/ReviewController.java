@@ -44,8 +44,8 @@ public class ReviewController {
     }
 
     @GetMapping()
-    public List<Review> findAll(@RequestParam(defaultValue = "0", required = false) @Positive Integer filmId,
-                                @RequestParam(defaultValue = "10", required = false) @Positive Integer count) {
+    public List<Review> findAll(@RequestParam(defaultValue = "0") @Positive Integer filmId,
+                                @RequestParam(defaultValue = "10") @Positive Integer count) {
         log.info("Поступил запрос на получение всех отзывов");
         return service.findAll(filmId, count);
     }

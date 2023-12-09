@@ -163,7 +163,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public LinkedHashSet<Film> filmsByDirector(int directorId, String sortBy) {
+    public Set<Film> filmsByDirector(int directorId, String sortBy) {
         Optional<Director> director = directorStorage.findById(directorId);
         if (director.isEmpty()) {
             throw new NotFoundException("Режиссёер не найден");
@@ -222,6 +222,14 @@ public class FilmDbStorage implements FilmStorage {
                 .genres(genreDbStorage.getGenreForCurrentFilm(resultSet.getInt("film_id"))).build(), userId, friendId);
     }
 
+    @Override
+    public List<Film> getFilms(List<Integer> ids) {
+        String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
+        String sqlQuery = String.format("SELECT film_id, name, description, release_date, duration, rating_mpa_id " +
+                "FROM films WHERE film_id IN (%s)",inSql);
+        return jdbcTemplate.query(sqlQuery, ids.toArray(),this::mapRowToFilm);
+    }
+
     private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
         Film film = Film.builder()
                 .id(resultSet.getInt("film_id"))
@@ -272,7 +280,7 @@ public class FilmDbStorage implements FilmStorage {
         }
     }
 
-    public LinkedHashSet<Director> getFilmDirectors(Integer filmId) {
+    public Set<Director> getFilmDirectors(Integer filmId) {
         String sql =
                 "SELECT d.DIRECTOR_ID, d.name " +
                         "FROM DIRECTOR_FILMS AS df " +
@@ -308,35 +316,22 @@ public class FilmDbStorage implements FilmStorage {
         switch (by) {
             case "title": {
                 String sql = sqlBegin + "WHERE LOWER(f.name) LIKE LOWER(CONCAT('%',?,'%')) " + sqlEnd;
-                searchResults = jdbcTemplate.query(sql, this::makeFilm, query);
+                searchResults = jdbcTemplate.query(sql, this::mapRowToFilm, query);
                 break;
             }
             case "director": {
                 String sql = sqlBegin + "WHERE LOWER(d.name) LIKE LOWER(CONCAT('%',?,'%')) " + sqlEnd;
-                searchResults = jdbcTemplate.query(sql, this::makeFilm, query);
+                searchResults = jdbcTemplate.query(sql, this::mapRowToFilm, query);
                 break;
             }
             case "title,director": {
                 String sql = sqlBegin + "WHERE LOWER(f.name) LIKE LOWER(CONCAT('%',?,'%')) " +
                         "OR LOWER(d.name) LIKE LOWER(CONCAT('%',?,'%')) " + sqlEnd;
-                searchResults = jdbcTemplate.query(sql, this::makeFilm, query, query);
+                searchResults = jdbcTemplate.query(sql, this::mapRowToFilm, query, query);
                 break;
             }
         }
+        searchResults.forEach(film -> film.setDirectors(getFilmDirectors(film.getId())));
         return searchResults;
-    }
-
-    private Film makeFilm(ResultSet resultSet, int rowNum) throws SQLException {
-        Film film = Film.builder()
-                .id(resultSet.getInt("film_id"))
-                .name(resultSet.getString("name"))
-                .description(resultSet.getString("description"))
-                .releaseDate(resultSet.getDate("release_date").toLocalDate())
-                .duration(resultSet.getInt("duration"))
-                .mpa(mpaDbStorage.getMpa(resultSet.getInt("rating_mpa_id")))
-                .genres(genreDbStorage.getGenreForCurrentFilm(resultSet.getInt("film_id")))
-                .directors(getFilmDirectors(resultSet.getInt("film_id")))
-                .build();
-        return film;
     }
 }

@@ -10,9 +10,9 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.like.LikeStorage;
 
 import java.time.Instant;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Service
@@ -73,7 +73,7 @@ public class FilmService {
         filmStorage.deleteFilm(filmId);
     }
 
-    public LinkedHashSet<Film> filmsByDirector(int directorId, String sortBy) {
+    public Set<Film> filmsByDirector(int directorId, String sortBy) {
         return filmStorage.filmsByDirector(directorId, sortBy);
     }
 

@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -71,9 +72,9 @@ public class FilmController {
     }
 
     @GetMapping("/director/{directorId}")
-    public LinkedHashSet<Film> filmsByDirector(@PathVariable int directorId, @RequestParam String sortBy) {
+    public Set<Film> filmsByDirector(@PathVariable int directorId, @RequestParam String sortBy) {
         log.info("Поступил запрос на получение списка фильмов режиссера");
-        LinkedHashSet<Film> films = filmService.filmsByDirector(directorId, sortBy);
+        Set<Film> films = filmService.filmsByDirector(directorId, sortBy);
         log.info("Ответ отправлен: {}", films);
         return films;
     }

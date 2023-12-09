@@ -2,9 +2,9 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 public interface FilmStorage {
@@ -51,9 +51,11 @@ public interface FilmStorage {
     /**
      * Метод для получения списка фильмов по режиссеру
      */
-    LinkedHashSet<Film> filmsByDirector(int directorId, String sortBy);
+    Set<Film> filmsByDirector(int directorId, String sortBy);
 
     List<Film> searchBy(String query, String by);
 
     List<Film> getCommonFilms(int userId, int friendId);
+
+    List<Film> getFilms(List<Integer> ids);
 }

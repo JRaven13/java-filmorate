@@ -59,7 +59,8 @@ public class DirectorDbStorage implements DirectorStorage {
         SqlRowSet directorRows = jdbcTemplate.queryForRowSet("SELECT * FROM DIRECTORS WHERE DIRECTOR_ID = ?", id);
         if (directorRows.next()) {
             return Optional.of(directorRows(directorRows));
-        } else log.info("Режиссёер с идентификатором {} не найден.", id);
+        }
+        log.info("Режиссёер с идентификатором {} не найден.", id);
         return Optional.empty();
     }
 
