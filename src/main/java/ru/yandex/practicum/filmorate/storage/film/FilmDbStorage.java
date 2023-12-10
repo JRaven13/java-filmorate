@@ -268,7 +268,7 @@ public class FilmDbStorage implements FilmStorage {
         if (Objects.isNull(film.getDirectors())) {
             return;
         }
-        try{
+        try {
             List<Director> directors = new ArrayList<>(film.getDirectors());
             jdbcTemplate.batchUpdate("INSERT INTO DIRECTOR_FILMS(FILM_ID, DIRECTOR_ID) VALUES (?, ?)", new BatchPreparedStatementSetter() {
                 @Override
