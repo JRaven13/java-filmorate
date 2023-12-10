@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service.director;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Director;
@@ -13,10 +12,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DirectorService {
     private DirectorStorage directorStorage;
-
-    public DirectorService(DirectorStorage directorStorage) {
-        this.directorStorage = directorStorage;
-    }
 
     public Director create(Director director) {
         return directorStorage.create(director);
