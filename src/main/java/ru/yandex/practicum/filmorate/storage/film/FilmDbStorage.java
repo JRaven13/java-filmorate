@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -17,6 +18,7 @@ import ru.yandex.practicum.filmorate.storage.genre.GenreDbStorage;
 import ru.yandex.practicum.filmorate.storage.like.LikeStorage;
 import ru.yandex.practicum.filmorate.storage.mpa.MpaDbStorage;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -266,13 +268,19 @@ public class FilmDbStorage implements FilmStorage {
         if (Objects.isNull(film.getDirectors())) {
             return;
         }
-        try {
-            film.getDirectors().forEach(d -> {
-                String sqlQuery =
-                        "INSERT INTO DIRECTOR_FILMS(FILM_ID, DIRECTOR_ID) VALUES (?, ?)";
-                jdbcTemplate.update(sqlQuery,
-                        film.getId(),
-                        d.getId());
+        try{
+            List<Director> directors = new ArrayList<>(film.getDirectors());
+            jdbcTemplate.batchUpdate("INSERT INTO DIRECTOR_FILMS(FILM_ID, DIRECTOR_ID) VALUES (?, ?)", new BatchPreparedStatementSetter() {
+                @Override
+                public void setValues(PreparedStatement ps, int i) throws SQLException {
+                    ps.setInt(1,film.getId());
+                    ps.setInt(2, directors.get(i).getId());
+                }
+
+                @Override
+                public int getBatchSize() {
+                    return directors.size();
+                }
             });
         } catch (DataIntegrityViolationException e) {
             log.error("Один из режисcёров не найден: {}", film.getDirectors());

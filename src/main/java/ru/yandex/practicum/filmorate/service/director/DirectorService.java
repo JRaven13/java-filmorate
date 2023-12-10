@@ -14,7 +14,6 @@ import java.util.List;
 public class DirectorService {
     private DirectorStorage directorStorage;
 
-    @Autowired
     public DirectorService(DirectorStorage directorStorage) {
         this.directorStorage = directorStorage;
     }
