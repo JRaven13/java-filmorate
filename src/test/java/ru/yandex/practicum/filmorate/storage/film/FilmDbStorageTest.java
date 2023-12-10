@@ -10,8 +10,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.film.FilmService;
-import ru.yandex.practicum.filmorate.storage.like.LikeDbStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
 import java.time.LocalDate;
@@ -25,9 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class FilmDbStorageTest {
     private final FilmDbStorage filmDbStorage;
-    private final FilmService filmService;
     private final UserDbStorage userDbStorage;
-    private final LikeDbStorage likeDbStorage;
+
     Film film;
     Film film2;
     User user;
@@ -99,16 +96,5 @@ class FilmDbStorageTest {
 
         filmDbStorage.deleteLike(film, 1);
     }
-
-    @Test
-    void getRatingTest() {
-        filmDbStorage.addFilm(film);
-        userDbStorage.addUser(user);
-        userDbStorage.addUser(user2);
-        filmDbStorage.like(film, 1);
-        filmDbStorage.like(film, 2);
-        assertEquals(1, filmService.getTopFilms(1).get(0).getId());
-    }
-
 
 }

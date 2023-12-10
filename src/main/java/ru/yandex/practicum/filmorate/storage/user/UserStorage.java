@@ -49,4 +49,5 @@ public interface UserStorage {
      */
     List<User> getFriendsByUserId(Integer id);
 
+    void deleteUser(int userid);
 }

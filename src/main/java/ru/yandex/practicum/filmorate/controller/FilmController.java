@@ -10,6 +10,8 @@ import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -21,7 +23,7 @@ public class FilmController {
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        log.info("Поступил запрос на добавление фильма.");
+        log.info("Поступил запрос на добавление фильма.{}", film);
         return filmService.create(film);
     }
 
@@ -34,7 +36,7 @@ public class FilmController {
     @PutMapping("/{id}/like/{userId}")
     public Film like(@PathVariable int id, @PathVariable int userId) {
         log.info("Поступил запрос на присвоение лайка фильму.");
-       return filmService.like(filmService.getFilm(id), userId);
+        return filmService.like(filmService.getFilm(id), userId);
     }
 
     @GetMapping()
@@ -50,9 +52,11 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> getBestFilms(@RequestParam(defaultValue = "10") int count) {
+    public List<Film> getBestFilms(@RequestParam(defaultValue = "10") int count,
+                                   @RequestParam Optional<Integer> genreId,
+                                   @RequestParam Optional<Integer> year) {
         log.info("Поступил запрос на получение списка популярных фильмов.");
-        return filmService.getTopFilms(count);
+        return filmService.getTopFilms(count, genreId, year);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
@@ -60,5 +64,31 @@ public class FilmController {
         log.info("Поступил запрос на удаление лайка у фильма.");
         return filmService.deleteLike(filmService.getFilm(id), userId);
     }
+
+    @DeleteMapping("/{filmId}")
+    public void deleteFilm(@PathVariable int filmId) {
+        filmService.deleteFilm(filmId);
+    }
+
+    @GetMapping("/director/{directorId}")
+    public Set<Film> filmsByDirector(@PathVariable int directorId, @RequestParam String sortBy) {
+        log.info("Поступил запрос на получение списка фильмов режиссера");
+        Set<Film> films = filmService.filmsByDirector(directorId, sortBy);
+        log.info("Ответ отправлен: {}", films);
+        return films;
+    }
+
+    @GetMapping("/search")
+    public List<Film> search(@RequestParam String query, @RequestParam String by) {
+        log.info("Поступил запрос на получение списка фильмов по названию.");
+        return filmService.getSearchResults(query, by);
+    }
+
+    @GetMapping("/common")
+    public List<Film> getCommonFilms(@RequestParam int userId, @RequestParam int friendId) {
+        log.info("Поступил запрос на получение общих фильмов у пользователей {} и {}.", userId, friendId);
+        return filmService.getCommonFilms(userId, friendId);
+    }
+
 
 }

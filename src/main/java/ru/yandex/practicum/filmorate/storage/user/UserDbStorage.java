@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.mpa.MpaDbStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,6 +19,8 @@ import java.util.*;
 @Slf4j
 @Component
 public class UserDbStorage implements UserStorage {
+
+    private MpaDbStorage mpaDbStorage;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -109,9 +112,15 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<User> getFriendsByUserId(Integer id) {
+        getUserById(id);
         String sqlQuery = "SELECT user_id, email, login, name, birthday FROM users WHERE user_id IN" +
                 "(SELECT friend_id FROM friends WHERE user_id=?)";
         return new ArrayList<>(jdbcTemplate.query(sqlQuery, this::mapRowToUser, id));
+    }
+
+    @Override
+    public void deleteUser(int userid) {
+        jdbcTemplate.update("DELETE FROM USERS WHERE USER_ID = ?", userid);
     }
 
     private Map<String, Object> toMap(User user) {
@@ -124,14 +133,13 @@ public class UserDbStorage implements UserStorage {
     }
 
     private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
-        User user = User.builder()
+        return User.builder()
                 .id(resultSet.getInt("user_id"))
                 .email(resultSet.getString("email"))
                 .login(resultSet.getString("login"))
                 .name(resultSet.getString("name"))
                 .birthday(resultSet.getDate("birthday").toLocalDate())
                 .build();
-        return user;
     }
 
     private void validationUser(User user) throws ValidationException {
